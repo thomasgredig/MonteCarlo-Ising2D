@@ -18,17 +18,19 @@ library(raster)
 
 # Parameters
 ############
-N = 10           # array size
+N = 50           # array size
 J = 1           # interaction strength
 conv.eq = 1000   # convergence to equilibrium
-conv = 100      # measurements
+conv = 500      # measurements
 reInit = FALSE  # re-initialize for new temperature
-TSeq = J*seq(1.2,3.8, by=0.02)  # temperature range
+TSeq = J*seq(1.2,3.8, by=0.04)  # temperature range
 
 path.FIGS = 'images'
 path.DATA = 'data'
 file.runTime = file.path(path.DATA,'runTimes.csv')
-if(file.exists(file.runTime)) { d.runTimeAll = read.csv(file.runTime) } else {
+if(file.exists(file.runTime)) { 
+  d.runTimeAll = read.csv(file.runTime, stringsAsFactors = FALSE) 
+} else {
   d.runTimeAll = data.frame()
 }
 
@@ -43,7 +45,7 @@ spin = matrix(data=sign(runif(N*N)-0.5), nrow=N)
 print(rasterGraph(spin))
 ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-Random.png')), width=4,height=4,dpi=220)
 system.time({
-  computeIsingRandExp(conv.eq*N*N, J, 1/2.4)
+  computeIsingRandExp(conv.eq*N*N, J, 1/2.6)
 })
 print(rasterGraph(spin))
 ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-Domains.png')), width=4,height=4,dpi=220)
@@ -90,8 +92,11 @@ ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-c',conv,'.png')), width=4
 write.csv(result,file.path(path.DATA,paste0('Ising2D-',N,'x',N,'-c',conv,'.csv')), row.names=FALSE)
 
 ggplot(result, aes(T.J, chi)) +
+  geom_smooth(span=0.2)+
   geom_point(col='red', size=2) + 
   ggtitle(paste('N=',N,'x',N,' conv=',conv, ' reInit=',reInit)) + 
   xlab('T/J') +
   ylab(expression(paste(chi))) +
   theme_bw()
+ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-c',conv,'-Chi.png')), width=4, height=3, dpi=220)
+

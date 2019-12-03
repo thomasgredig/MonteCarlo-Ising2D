@@ -75,7 +75,7 @@ rasterGraph <- function(spinMatrix) {
   df$spin = as.vector(spinMatrix)
   ggplot(df, aes(x,y, fill=spin)) + geom_raster() + 
     scale_x_continuous(expand=c(0,0))+
-    scale_fill_gradientn(colors=c("red","darkgrey"))+
+    scale_fill_gradientn(colors=c("red","blue"))+
     scale_y_continuous(expand=c(0,0))+
     theme_bw() + theme(legend.position='none')
 }

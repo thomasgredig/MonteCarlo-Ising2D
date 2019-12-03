@@ -15,7 +15,7 @@ After a bit of Monte Carlo, a domain pattern emerges at low enough temperatures:
 
 Repeating this procedure over a range of temperatures and waiting for convergence, one finds the phase transition where domains can form:
 
-![Ising 2D transition expected near 2.3](images/Ising2D-20x20-c1200.png)
+![Ising 2D transition expected near 2.3](images/Ising2D-25x25-c200.png)
 
 
 ## Optimization
