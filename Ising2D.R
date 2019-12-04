@@ -14,17 +14,13 @@
 # Ising2D Model Parameters
 ##########################
 library(ggplot2)
-library(raster)
-
-num.cores = detectCores()
-registerDoParallel(num.cores) 
 
 # Parameters
 ############
-N = 100           # array size
+N = 60           # array size
 J = 1           # interaction strength
-conv.eq = 100   # convergence to equilibrium
-conv = 100      # measurements
+conv.eq = 500   # convergence to equilibrium
+conv = 300      # measurements
 reInit = FALSE  # re-initialize for new temperature
 TSeq = J*seq(1.2,3.8, by=0.02)  # temperature range
 
@@ -45,21 +41,14 @@ spin = matrix(data=sign(runif(N*N)-0.5), nrow=N)
 
 # Sample Output
 ###############
-# print(rasterGraph(spin))
-# q1=c()
-# #ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-Random.png')), width=4,height=4,dpi=220)
-# system.time({
-#   for(q in 1:1000) {
-#     computeIsingRand(N*N/2, J, 1/2.4)
-#     q1 = c(q1,totalEnergy(N,J))
-#   }
-# })
-# plot(1:1000/2,q1/(N*N))
-# q1sd = as.vector(sapply(split(q1,rep(1:50,each=20)),sd))
-# plot(q1sd)
-#ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-Domains.png')), width=4,height=4,dpi=220)
+rasterGraph(spin)
+ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-Random.png')), width=4,height=4,dpi=220)
+computeIsingRandExp(conv.eq*N*N, J, 1/2.4)
+totalEnergy(N,J)
+rasterGraph(spin)
+ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-Domains.png')), width=4,height=4,dpi=220)
 
-# Computation Intesive Run: M vs T
+# Computation Intesive Part: M vs T
 ##################################
 d.runTime = data.frame(N,J,conv.eq,conv, reInit, date=Sys.Date(), 
                        start.time=as.numeric(Sys.time()),
