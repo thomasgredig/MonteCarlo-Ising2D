@@ -1,6 +1,23 @@
 # MonteCarlo-Ising2D
- Monte Carlo simulation of Ising 2D model in R
- 
+ Monte Carlo simulation of Ising 2D model in R, here is the essential code, where `spin` is the matrix with +1 and -1 values:
+
+ ```R
+ for(i in 1:num.iter) {
+   x=round(runif(1,min=1,max=N))
+   y=round(runif(1,min=1,max=N))
+   nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] +
+     spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
+   dE = 2*J*spin[x,y]*nb
+   if (dE<0) {
+     spin[x,y] <<- -spin[x,y]
+   } else {
+     if (runif(1) < exp(-dE*beta)) {
+       spin[x,y] <<-  -spin[x,y]
+     }
+   }
+ }
+ ```
+
 
 ## Ising 2D Model
 
