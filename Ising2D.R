@@ -21,8 +21,8 @@ library(raster)
 N = 50           # array size
 J = 1           # interaction strength
 conv.eq = 1000   # convergence to equilibrium
-conv = 500      # measurements
-reInit = FALSE  # re-initialize for new temperature
+conv = 501      # measurements
+reInit = TRUE  # re-initialize for new temperature
 TSeq = J*seq(1.2,3.8, by=0.04)  # temperature range
 
 path.FIGS = 'images'
@@ -82,7 +82,7 @@ write.csv(d.runTimeAll,file=file.runTime,row.names = FALSE)
 
 # Graphing of Data
 ##################
-ggplot(result, aes(T.J, abs(Mavg))) +
+ggplot(result, aes(T.J, abs(Mavg)/(conv*N*N))) +
   geom_point(col='red', size=2) + 
   ggtitle(paste('N=',N,'x',N,' conv=',conv, ' reInit=',reInit)) + 
   xlab('T/J') +

@@ -15,7 +15,11 @@ After a bit of Monte Carlo, a domain pattern emerges at low enough temperatures:
 
 Repeating this procedure over a range of temperatures and waiting for convergence, one finds the phase transition where domains can form:
 
-![Ising 2D transition expected near 2.3](images/Ising2D-25x25-c200.png)
+![Ising 2D transition expected near 2.3](images/Ising2D-25x25-c1000.png)
+
+The susceptibility was also computed, it is found at T/J = 2.36; the critical temperature is at [T/J = 2.27](https://en.wikipedia.org/wiki/Square-lattice_Ising_model).
+
+![Susceptibility as a function of temperature shows Lambda Peak](images/Ising2D-25x25-c1000-Chi.png)
 
 
 ## Optimization
