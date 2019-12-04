@@ -1,5 +1,26 @@
 # Computation
 #############
+# basic Ising computation step
+computeIsing <- function(num.iter, J, beta) {
+  for(i in 1:num.iter) {
+    # choose random spin
+    x=round(runif(1,min=1,max=N))
+    y=round(runif(1,min=1,max=N))
+    # compute energy change to flip:
+    nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] + 
+      spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
+    dE = 2*J*spin[x,y]*nb
+    if (dE<0) { 
+      spin[x,y] <<- -spin[x,y] 
+    } else {
+      # flip coin
+      if (runif(1) < exp(-dE*beta)) {
+        spin[x,y] <<-  -spin[x,y]
+      }
+    }
+  }
+}
+
 
 computeIsingRandExp <- function(num.iter, J, beta) {
   xa=round(runif(num.iter,min=1,max=N))
@@ -24,27 +45,6 @@ computeIsingRandExp <- function(num.iter, J, beta) {
 
 
 
-# basic Ising computation step
-computeIsing <- function(num.iter, J, beta) {
-  for(i in 1:num.iter) {
-    # choose random spin
-    x=round(runif(1,min=1,max=N))
-    y=round(runif(1,min=1,max=N))
-    # compute energy change to flip:
-    nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] + 
-      spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
-    dE = 2*J*spin[x,y]*nb
-    if (dE<0) { 
-      spin[x,y] <<- -spin[x,y] 
-    } else {
-      # flip coin
-      if (runif(1) < exp(-dE*beta)) {
-        spin[x,y] <<-  -spin[x,y]
-      }
-    }
-  }
-}
-
 
 computeIsingRand <- function(num.iter, J, beta) {
   xa=round(runif(num.iter,min=1,max=N))
@@ -68,6 +68,17 @@ computeIsingRand <- function(num.iter, J, beta) {
   }
 }
 
+totalEnergy <- function(N,J) {
+  totE = 0
+  for(x in 1:N) {
+    for(y in 1:N) {
+      nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] + 
+        spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
+      totE = totE + J*spin[x,y]*nb
+    }
+  }
+  totE / 4
+}
 
 
 rasterGraph <- function(spinMatrix) {
