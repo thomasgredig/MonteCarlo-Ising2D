@@ -17,12 +17,12 @@ library(ggplot2)
 
 # Parameters
 ############
-N = 25           # array size
+N = 80           # array size
 J = 1           # interaction strength
-conv.eq = 4000   # convergence to equilibrium
-conv = 2000      # measurements
-reInit = TRUE  # re-initialize for new temperature
-TSeq = J*seq(1.2,3.8, by=0.04)  # temperature range
+conv.eq = 1000   # convergence to equilibrium
+conv = 1000      # measurements
+reInit = FALSE  # re-initialize for new temperature
+TSeq = J*seq(1.2,3.8, by=0.02)  # temperature range
 
 path.FIGS = 'images'
 path.DATA = 'data'
