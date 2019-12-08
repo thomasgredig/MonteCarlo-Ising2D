@@ -44,3 +44,9 @@ The susceptibility was also computed, it is found at `T/J = 2.36`; the critical 
 To improve the speed, we can generate the random numbers for all iterations at once, see `computeIsingRand()`. This more than doubles the speed as compared to brute-force `computeIsing()`. In the test, 878ms become 385ms for the computation.
 
 Eliminating the exp function does not improve speed at all, see `computeIsingRandExp()`. The R compiler must have a pretty fast method to retrieve the exponentials already.
+
+## Ising 1D
+
+Adding Monte Carlo computation for 1D case, randomly chose x-axis. The results show no phase transition as expected:
+
+![Ising 1D](images/Ising1D-40x40-c500-Chi.png)

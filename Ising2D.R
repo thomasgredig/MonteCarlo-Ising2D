@@ -17,12 +17,12 @@ library(ggplot2)
 
 # Parameters
 ############
-N = 80           # array size
+N = 8           # array size
 J = 1           # interaction strength
-conv.eq = 1000   # convergence to equilibrium
-conv = 1000      # measurements
+conv.eq = 2000   # convergence to equilibrium
+conv = 5000      # measurements
 reInit = FALSE  # re-initialize for new temperature
-TSeq = J*seq(1.2,3.8, by=0.02)  # temperature range
+TSeq = J*seq(1.2,3.8, by=0.01)  # temperature range
 
 path.FIGS = 'images'
 path.DATA = 'data'
@@ -75,10 +75,11 @@ for(b in bSeq) {
 # save timing
 d.runTime$end.time = as.numeric(Sys.time())
 d.runTime$diff.s = d.runTime$end.time-d.runTime$start.time
-d.runTimeAll = rbind(d.runTimeAll,d.runTime)
 d.runTime$type = '2D'
 d.runTime$step = TSeq[2]-TSeq[1]
 d.runTime$TempStart = TSeq[1]
+d.runTimeAll = rbind(d.runTimeAll,d.runTime)
+
 write.csv(d.runTimeAll,file=file.runTime,row.names = FALSE)
 
 # Graphing of Data

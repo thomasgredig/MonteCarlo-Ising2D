@@ -10,12 +10,12 @@ library(ggplot2)
 
 # Parameters
 ############
-N = 20           # array size
+N = 40           # array size
 J = 1           # interaction strength
-conv.eq = 200   # convergence to equilibrium
-conv = 200      # measurements
+conv.eq = 500   # convergence to equilibrium
+conv = 500      # measurements
 reInit = FALSE  # re-initialize for new temperature
-TSeq = J*seq(1,5, by=0.1)  # temperature range
+TSeq = J*seq(0.5,4, by=0.1)  # temperature range
 
 path.FIGS = 'images'
 path.DATA = 'data'
@@ -82,7 +82,6 @@ ggplot(result, aes(T.J, abs(Mavg)/(conv*N*N))) +
   ggtitle(paste('N=',N,'x',N,' conv=',conv, ' reInit=',reInit)) + 
   xlab('T/J') +
   ylab('|M|') +
-  geom_vline(xintercept=2.27, stroke=5,size=2, alpha=0.5) + 
   theme_bw()
 ggsave(file.path(path.FIGS,paste0('Ising1D-',N,'x',N,'-c',conv,'.png')), width=4, height=3, dpi=220)
 write.csv(result,file.path(path.DATA,paste0('Ising1D-',N,'x',N,'-c',conv,'.csv')), row.names=FALSE)
@@ -93,7 +92,6 @@ ggplot(result, aes(T.J, chi)) +
   ggtitle(paste('N=',N,'x',N,' conv=',conv, ' reInit=',reInit)) + 
   xlab('T/J') +
   ylab(expression(paste(chi))) +
-  geom_vline(xintercept=2.27, stroke=5,size=2, alpha=0.5) + 
   theme_bw()
 ggsave(file.path(path.FIGS,paste0('Ising1D-',N,'x',N,'-c',conv,'-Chi.png')), width=4, height=3, dpi=220)
 
