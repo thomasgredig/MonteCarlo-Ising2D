@@ -68,6 +68,28 @@ computeIsingRand <- function(num.iter, J, beta) {
   }
 }
 
+computeIsing1DRand <- function(num.iter, J, beta) {
+  xa=round(runif(num.iter,min=1,max=N))
+  ya=round(runif(num.iter,min=1,max=N))
+  for(i in 1:num.iter) {
+    # choose random spin
+    x=xa[i]
+    y=ya[i]
+    # compute energy change to flip:
+    nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] 
+    dE = 2*J*spin[x,y]*nb
+    if (dE<0) { 
+      spin[x,y] <<- -spin[x,y] 
+    } else {
+      # flip coin
+      if (runif(1) < exp(-dE*beta)) {
+        spin[x,y] <<-  -spin[x,y]
+      }
+    }
+  }
+}
+
+
 totalEnergy <- function(N,J) {
   totE = 0
   for(x in 1:N) {
