@@ -1,7 +1,7 @@
 #########################################
 # Compute the temperature dependence of the
-# Magnetization for the Ising 2D model and
-# test the speed in R
+# Magnetization for the Ising 2D model 
+# with random DEFECTS
 #
 # see https://arxiv.org/pdf/0803.0217.pdf
 # see http://micro.stanford.edu/~caiwei/me334/Chap12_Ising_Model_v04.pdf 
@@ -16,13 +16,13 @@
 library(ggplot2)
 
 # Parameters
-############ 
-N = 8           # array size
-J = 1           # interaction strength
-conv.eq = 1000   # convergence to equilibrium
-conv = 550      # measurements
-reInit = TRUE  # re-initialize for new temperature
-TSeq = J*seq(1.2,3.8, by=0.01)  # temperature range
+############
+N = 50           # array size
+J = 1            # interaction strength
+conv.eq = 3000   # convergence to equilibrium
+conv = 1000      # measurements
+reInit = TRUE    # re-initialize for new temperature
+TSeq = J*seq(0.9,1.8, by=0.02)  # temperature range
 
 path.FIGS = 'images'
 path.DATA = 'data'
@@ -42,11 +42,11 @@ spin = matrix(data=sign(runif(N*N)-0.5), nrow=N)
 # Sample Output
 ###############
 rasterGraph(spin)
-ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-Random.png')), width=4,height=4,dpi=220)
-computeIsingRandExp(conv.eq*N*N, J, 1/2.4)
+ggsave(file.path(path.FIGS,paste0('Ising2D-Tri-',N,'x',N,'-Random.png')), width=4,height=4,dpi=220)
+computeIsing2DTriangularRand(conv.eq*N*N, J, 1/2.4)
 totalEnergy(N,J)
 rasterGraph(spin)
-ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-Domains.png')), width=4,height=4,dpi=220)
+ggsave(file.path(path.FIGS,paste0('Ising2D-Tri-',N,'x',N,'-Domains.png')), width=4,height=4,dpi=220)
 
 # Computation Intesive Part: M vs T
 ##################################
@@ -58,11 +58,11 @@ result = data.frame()
 for(b in bSeq) {
   print(paste("Temp: ",1/b))
   if (reInit) { spin = matrix(data=sign(runif(N*N)-0.5), nrow=N) }
-  computeIsingRandExp(conv.eq*N*N, J, b)
+  computeIsing2DTriangularRand(conv.eq*N*N, J, b)
   Mavg = 0
   M2avg = 0
   for(i in 1:conv) {
-    computeIsingRandExp(N*N, J, b)
+    computeIsing2DTriangularRand(N*N, J, b)
     Ms = sum(spin)
     Mavg = Mavg + Ms
     M2avg = M2avg + Ms*Ms
@@ -74,8 +74,8 @@ for(b in bSeq) {
 
 # save timing
 d.runTime$end.time = as.numeric(Sys.time())
-d.runTime$diff.s = signif(d.runTime$end.time-d.runTime$start.time,4)
-d.runTime$type = '2D'
+d.runTime$diff.s = d.runTime$end.time-d.runTime$start.time
+d.runTime$type = '2D Tri'
 d.runTime$step = TSeq[2]-TSeq[1]
 d.runTime$TempStart = TSeq[1]
 d.runTimeAll = rbind(d.runTimeAll,d.runTime)
@@ -89,10 +89,9 @@ ggplot(result, aes(T.J, abs(Mavg)/(conv*N*N))) +
   ggtitle(paste('N=',N,'x',N,' conv=',conv, ' reInit=',reInit)) + 
   xlab('T/J') +
   ylab('|M|') +
-  geom_vline(xintercept=2.27, stroke=5,size=2, alpha=0.5) + 
   theme_bw()
-ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-c',conv,'.png')), width=4, height=3, dpi=220)
-write.csv(result,file.path(path.DATA,paste0('Ising2D-',N,'x',N,'-c',conv,'.csv')), row.names=FALSE)
+ggsave(file.path(path.FIGS,paste0('Ising2D-Tri-',N,'x',N,'-c',conv,'.png')), width=4, height=3, dpi=220)
+write.csv(result,file.path(path.DATA,paste0('Ising2D-Tri-',N,'x',N,'-c',conv,'.csv')), row.names=FALSE)
 
 ggplot(result, aes(T.J, chi)) +
   geom_smooth(span=0.2)+
@@ -100,7 +99,6 @@ ggplot(result, aes(T.J, chi)) +
   ggtitle(paste('N=',N,'x',N,' conv=',conv, ' reInit=',reInit)) + 
   xlab('T/J') +
   ylab(expression(paste(chi))) +
-  geom_vline(xintercept=2.27, stroke=5,size=2, alpha=0.5) + 
   theme_bw()
-ggsave(file.path(path.FIGS,paste0('Ising2D-',N,'x',N,'-c',conv,'-Chi.png')), width=4, height=3, dpi=220)
+ggsave(file.path(path.FIGS,paste0('Ising2D-Tri-',N,'x',N,'-c',conv,'-Chi.png')), width=4, height=3, dpi=220)
 

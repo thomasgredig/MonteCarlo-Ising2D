@@ -19,6 +19,15 @@
  ```
 
 
+## Background
+
+This implementation uses the [Metropolis-Hastings Implementation](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm), which is the extended Metropolis algorithm from the 1970s. A two-dimensional lattice of size N will be used. Periodic boundary conditions are applied; i.e. it is represented by the surface of a 3D torus. 
+
+The algorithm is applied for a certain *burn-on* time, then the measurements are performed. The stored parameters are, <M>, <M<sup>2</sup>>, <E>, <E<sup>2</sup>>, and <M<sup>4</sup>> for computing the cumulant.
+
+A good review is given by Jacques Kotze in [Introduction to Monte Carlo Methods for an Ising Model of a Ferromgnet](https://arxiv.org/pdf/0803.0217.pdf), which also includes several references to better understand the basic model. 
+
+
 ## Ising 2D Model
 
 The Ising2D model is initialized as follows:

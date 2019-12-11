@@ -10,7 +10,7 @@ computeIsing <- function(num.iter, J, beta) {
     nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] + 
       spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
     dE = 2*J*spin[x,y]*nb
-    if (dE<0) { 
+    if (dE <= 0) { 
       spin[x,y] <<- -spin[x,y] 
     } else {
       # flip coin
@@ -35,7 +35,7 @@ computeIsingRandExp <- function(num.iter, J, beta) {
     nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] + 
       spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
     dE = spin[x,y]*nb
-    if (dE<0) { 
+    if (dE <= 0) { 
       spin[x,y] <<- -spin[x,y] 
     } else if (runif(1) < expVal[(dE+5)]) {
       spin[x,y] <<-  -spin[x,y]
@@ -57,7 +57,7 @@ computeIsingRand <- function(num.iter, J, beta) {
     nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] + 
       spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
     dE = 2*J*spin[x,y]*nb
-    if (dE<0) { 
+    if (dE <= 0) { 
       spin[x,y] <<- -spin[x,y] 
     } else {
       # flip coin
@@ -78,7 +78,7 @@ computeIsing1DRand <- function(num.iter, J, beta) {
     # compute energy change to flip:
     nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] 
     dE = 2*J*spin[x,y]*nb
-    if (dE<0) { 
+    if (dE <= 0) { 
       spin[x,y] <<- -spin[x,y] 
     } else {
       # flip coin
@@ -101,7 +101,7 @@ computeIsing2DTriangularRand <- function(num.iter, J, beta) {
     # top, top-right, right
     nb = spin[x,(y %% N)+1] + spin[(x %% N)+1,(y %% N)+1] + spin[(x %% N)+1,y]
     dE = 2*J*spin[x,y]*nb
-    if (dE<0) { 
+    if (dE <= 0) { 
       spin[x,y] <<- -spin[x,y] 
     } else {
       # flip coin
@@ -120,10 +120,22 @@ totalEnergy <- function(N,J) {
     for(y in 1:N) {
       nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] + 
         spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
-      totE = totE + J*spin[x,y]*nb
+      totE = totE - J*spin[x,y]*nb
     }
   }
   totE / 4
+}
+
+totalEnergy2 <- function(N,J) {
+  totE = 0
+  for(x in 1:N) {
+    for(y in 1:N) {
+      nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] + 
+        spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
+      totE = totE + (- J*spin[x,y]*nb)^2
+    }
+  }
+  totE / 8
 }
 
 
