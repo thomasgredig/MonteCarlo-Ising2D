@@ -17,12 +17,14 @@ library(ggplot2)
 
 # Parameters
 ############
-N = 50           # array size
+N = 16           # array size
+N.defects = 26    # number of defects, percentage = N.defects / N*N
+N.defects / (N*N)*100
 J = 1            # interaction strength
-conv.eq = 3000   # convergence to equilibrium
-conv = 1000      # measurements
+conv.eq = 5001   # convergence to equilibrium
+conv = 2001      # measurements
 reInit = TRUE    # re-initialize for new temperature
-TSeq = J*seq(0.9,1.8, by=0.02)  # temperature range
+TSeq = J*seq(1,3, by=0.05)  # temperature range
 
 path.FIGS = 'images'
 path.DATA = 'data'
@@ -38,15 +40,18 @@ source('ising.func.R')
 # Array Initialization
 ######################
 spin = matrix(data=sign(runif(N*N)-0.5), nrow=N)
+J.matrix =  matrix(data=J, nrow=N, ncol=N)
+x = runif(N.defects,1,N*N)
+J.matrix[x]=0
+rasterGraph(J.matrix)
 
 # Sample Output
 ###############
 rasterGraph(spin)
-ggsave(file.path(path.FIGS,paste0('Ising2D-Tri-',N,'x',N,'-Random.png')), width=4,height=4,dpi=220)
-computeIsing2DTriangularRand(conv.eq*N*N, J, 1/2.4)
+beta = 1/1.0
+computeIsing2DDefectRand(conv.eq*N*N, J.matrix, beta)
 totalEnergy(N,J)
 rasterGraph(spin)
-ggsave(file.path(path.FIGS,paste0('Ising2D-Tri-',N,'x',N,'-Domains.png')), width=4,height=4,dpi=220)
 
 # Computation Intesive Part: M vs T
 ##################################
@@ -58,11 +63,11 @@ result = data.frame()
 for(b in bSeq) {
   print(paste("Temp: ",1/b))
   if (reInit) { spin = matrix(data=sign(runif(N*N)-0.5), nrow=N) }
-  computeIsing2DTriangularRand(conv.eq*N*N, J, b)
+  computeIsing2DDefectRand(conv.eq*N*N, J.matrix, b)
   Mavg = 0
   M2avg = 0
   for(i in 1:conv) {
-    computeIsing2DTriangularRand(N*N, J, b)
+    computeIsing2DDefectRand(N*N, J.matrix, b)
     Ms = sum(spin)
     Mavg = Mavg + Ms
     M2avg = M2avg + Ms*Ms
@@ -75,7 +80,7 @@ for(b in bSeq) {
 # save timing
 d.runTime$end.time = as.numeric(Sys.time())
 d.runTime$diff.s = d.runTime$end.time-d.runTime$start.time
-d.runTime$type = '2D Tri'
+d.runTime$type = '2D Defect'
 d.runTime$step = TSeq[2]-TSeq[1]
 d.runTime$TempStart = TSeq[1]
 d.runTimeAll = rbind(d.runTimeAll,d.runTime)
@@ -86,12 +91,12 @@ write.csv(d.runTimeAll,file=file.runTime,row.names = FALSE)
 ##################
 ggplot(result, aes(T.J, abs(Mavg)/(conv*N*N))) +
   geom_point(col='red', size=2) + 
-  ggtitle(paste('N=',N,'x',N,' conv=',conv, ' reInit=',reInit)) + 
+  ggtitle(paste('N=',N,'x',N,' conv=',conv, ' N.defects=',N.defects)) + 
   xlab('T/J') +
   ylab('|M|') +
   theme_bw()
-ggsave(file.path(path.FIGS,paste0('Ising2D-Tri-',N,'x',N,'-c',conv,'.png')), width=4, height=3, dpi=220)
-write.csv(result,file.path(path.DATA,paste0('Ising2D-Tri-',N,'x',N,'-c',conv,'.csv')), row.names=FALSE)
+ggsave(file.path(path.FIGS,paste0('Ising2D-Defect-',N,'x',N,'-c',conv,'.png')), width=4, height=3, dpi=220)
+write.csv(result,file.path(path.DATA,paste0('Ising2D-Defect-',N,'x',N,'-c',conv,'.csv')), row.names=FALSE)
 
 ggplot(result, aes(T.J, chi)) +
   geom_smooth(span=0.2)+
@@ -100,5 +105,5 @@ ggplot(result, aes(T.J, chi)) +
   xlab('T/J') +
   ylab(expression(paste(chi))) +
   theme_bw()
-ggsave(file.path(path.FIGS,paste0('Ising2D-Tri-',N,'x',N,'-c',conv,'-Chi.png')), width=4, height=3, dpi=220)
+ggsave(file.path(path.FIGS,paste0('Ising2D-Defect-',N,'x',N,'-c',conv,'-Chi.png')), width=4, height=3, dpi=220)
 

@@ -89,6 +89,30 @@ computeIsing1DRand <- function(num.iter, J, beta) {
   }
 }
 
+computeIsing2DDefectRand <- function(num.iter, Jm, beta) {
+  xa=round(runif(num.iter,min=1,max=N))
+  ya=round(runif(num.iter,min=1,max=N))
+  for(i in 1:num.iter) {
+    x=xa[i]
+    y=ya[i]
+    # compute energy change to flip:
+    if(Jm[x,y]==0) { 
+      Jnb=0 
+    } else {
+      Jnb = Jm[(x %% N)+1,y]*spin[(x %% N)+1,y] + Jm[((x-2) %% N)+1,y]*spin[((x-2) %% N)+1,y] + 
+        Jm[x,(y %% N)+1]*spin[x,(y %% N)+1] + Jm[x,((y-2) %% N)+1]*spin[x,((y-2) %% N)+1]
+    }
+    dE = 2*Jm[x,y]*spin[x,y]*Jnb
+    if (dE <= 0) { 
+      spin[x,y] <<- -spin[x,y] 
+    } else {
+      # flip coin
+      if (runif(1) < exp(-dE*beta)) {
+        spin[x,y] <<-  -spin[x,y]
+      }
+    }
+  }
+}
 
 computeIsing2DTriangularRand <- function(num.iter, J, beta) {
   xa=round(runif(num.iter,min=1,max=N))

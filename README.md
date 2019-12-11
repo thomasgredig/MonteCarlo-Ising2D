@@ -1,5 +1,5 @@
 # MonteCarlo-Ising2D
- Monte Carlo simulation of Ising 2D model in R, here is the essential code, where `spin` is the matrix with +1 and -1 values:
+ Monte Carlo simulation of Ising 2D model in R, here is the essential code for periodic boundary conditions, where `spin` is the matrix with +1 and -1 values:
 
  ```R
  for(i in 1:num.iter) {
@@ -8,7 +8,7 @@
    nb = spin[(x %% N)+1,y] + spin[((x-2) %% N)+1,y] +
      spin[x,(y %% N)+1] + spin[x,((y-2) %% N)+1]
    dE = 2*J*spin[x,y]*nb
-   if (dE<0) {
+   if (dE <= 0) {
      spin[x,y] <<- -spin[x,y]
    } else {
      if (runif(1) < exp(-dE*beta)) {
@@ -23,7 +23,7 @@
 
 This implementation uses the [Metropolis-Hastings Implementation](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm), which is the extended Metropolis algorithm from the 1970s. A two-dimensional lattice of size N will be used. Periodic boundary conditions are applied; i.e. it is represented by the surface of a 3D torus. 
 
-The algorithm is applied for a certain *burn-on* time, then the measurements are performed. The stored parameters are, <M>, <M<sup>2</sup>>, <E>, <E<sup>2</sup>>, and <M<sup>4</sup>> for computing the cumulant.
+The algorithm is applied for a certain *burn-in* time, then the measurements are performed. The stored parameters are, \<M\>, <M<sup>2</sup>>, \<E\>, <E<sup>2</sup>>, and <M<sup>4</sup>> with the latter for computing the [Binder cumulant](https://link-springer-com.csulb.idm.oclc.org/article/10.1007/BF01293604).
 
 A good review is given by Jacques Kotze in [Introduction to Monte Carlo Methods for an Ising Model of a Ferromgnet](https://arxiv.org/pdf/0803.0217.pdf), which also includes several references to better understand the basic model. 
 
@@ -54,6 +54,19 @@ We are considering 3 next nearest neighbours instead of 4. We are choosing the f
 
 ![triangular lattice](images/Ising2D-Model.png)
 
+## Ising 2D with Defects
+
+Read about the [Ising 2D model with Defects](README-Ising2D-Defects.md).
+
+
+
+## Ising 1D
+
+Adding Monte Carlo computation for 1D case, randomly chose x-axis. The results show no phase transition as expected (although, no equilibrium is yet reached for the lowest temperatures):
+
+![Ising 1D](images/Ising1D-40x40-c500-Chi.png)
+
+
 
 
 ## Optimization
@@ -62,8 +75,4 @@ To improve the speed, we can generate the random numbers for all iterations at o
 
 Eliminating the exp function does not improve speed at all, see `computeIsingRandExp()`. The R compiler must have a pretty fast method to retrieve the exponentials already.
 
-## Ising 1D
 
-Adding Monte Carlo computation for 1D case, randomly chose x-axis. The results show no phase transition as expected:
-
-![Ising 1D](images/Ising1D-40x40-c500-Chi.png)
