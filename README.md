@@ -39,6 +39,14 @@ The susceptibility was also computed, it is found at `T/J = 2.36`; the critical 
 ![Susceptibility as a function of temperature shows Lambda Peak](images/Ising2D-25x25-c1000-Chi.png)
 
 
+## Ising 2D Triangular Lattice
+
+We are considering 3 next nearest neighbours instead of 4. We are choosing the following schema:
+
+![triangular lattice](images/Ising2D-Model.png)
+
+
+
 ## Optimization
 
 To improve the speed, we can generate the random numbers for all iterations at once, see `computeIsingRand()`. This more than doubles the speed as compared to brute-force `computeIsing()`. In the test, 878ms become 385ms for the computation.
