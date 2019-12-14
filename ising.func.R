@@ -122,9 +122,10 @@ computeIsing2DTriangularRand <- function(num.iter, J, beta) {
     x=xa[i]
     y=ya[i]
     # compute energy change to flip:
-    # top, top-right, right
-    nb = spin[x,(y %% N)+1] + spin[(x %% N)+1,(y %% N)+1] + spin[(x %% N)+1,y]
-    dE = 2*J*spin[x,y]*nb
+    # top, top-right, right, bottom, bottom-left, left
+    nb = spin[x,(y %% N)+1] + spin[(x %% N)+1,(y %% N)+1] + spin[(x %% N)+1,y] +
+      spin[x,((y-2) %% N)+1] + spin[((x-2) %% N)+1,((y-2) %% N)+1] +  spin[((x-2) %% N)+1,y] 
+    dE = 2*J*spin[x,y]*nb 
     if (dE <= 0) { 
       spin[x,y] <<- -spin[x,y] 
     } else {

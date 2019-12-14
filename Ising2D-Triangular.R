@@ -22,7 +22,7 @@ J = 1            # interaction strength
 conv.eq = 3000   # convergence to equilibrium
 conv = 1000      # measurements
 reInit = TRUE    # re-initialize for new temperature
-TSeq = J*seq(0.9,1.8, by=0.02)  # temperature range
+TSeq = J*seq(1,5, by=0.05)  # temperature range
 
 path.FIGS = 'images'
 path.DATA = 'data'
